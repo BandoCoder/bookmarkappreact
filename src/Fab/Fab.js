@@ -3,7 +3,11 @@ import "./Fab.css";
 
 class Fab extends Component {
   render() {
-    return <div className="fab">&#43;</div>;
+    return (
+      <div className="fab" onClick={(e) => this.props.showForm(true)}>
+        &#43;
+      </div>
+    );
   }
 }
 

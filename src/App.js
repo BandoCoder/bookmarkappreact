@@ -12,11 +12,62 @@ class App extends Component {
       showAddForm: false,
     };
   }
+
+  componentDidMount() {
+    const url = "https://tf-ed-bookmarks-api.herokuapp.com/v3/bookmarks";
+    const options = {
+      method: "GET",
+      headers: {
+        Authorization:
+          "Bearer $2a$10$gnDB98Ur2Nbbff0HFDiq1O6LjRw49xpPUqXX8J9.33ChPCzGtCmcW",
+        "Content-type": "application/json",
+      },
+    };
+    fetch(url, options)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Something Went Wrong, Please Try Again Later foo");
+        }
+        return res;
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState({
+          bookmarks: data,
+          error: null,
+        });
+      })
+      .catch((err) => {
+        this.setState({
+          error: err.message,
+        });
+      });
+  }
+
+  setShowAddForm(show) {
+    this.setState({
+      showAddForm: show,
+    });
+  }
+
+  addBookmark(bookmark) {
+    this.setState({
+      bookmarks: [...this.state.bookmarks, bookmark],
+      showAddForm: false,
+    });
+  }
+
   render() {
     const page = this.state.showAddForm ? (
-      <AddBookmark />
+      <AddBookmark
+        showForm={(show) => this.setShowAddForm(show)}
+        handleAdd={(bookmark) => this.addBookmark(bookmark)}
+      />
     ) : (
-      <BookmarkApp bookmarks={this.state.bookmarks} />
+      <BookmarkApp
+        bookmarks={this.state.bookmarks}
+        showForm={(show) => this.setShowAddForm(show)}
+      />
     );
     return <div className="App">{page}</div>;
   }
